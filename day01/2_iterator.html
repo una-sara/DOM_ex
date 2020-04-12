@@ -1,0 +1,51 @@
+﻿<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>遍历节点树</title>
+		<meta charset="utf-8"/>
+	</head>
+	<body>
+		<span>Hello World !</span>
+		<ul id="nav">
+			<li>{{count}}</li>
+			<li>综艺
+				<ul>
+					<li>{{total}}</li>
+					<li>爸爸</li>
+					<li>{{total}}</li>
+				</ul>
+			</li>
+			<li>{{count}}</li>
+		</ul>	
+<script>
+var total=200;
+var count=10;
+
+//Vue框架可以自动将total和count两个变量的值送到页面上指定得位置上
+
+function getChildren(parent){
+//arguments.callee->getChildren
+	//1. 先获得当前父元素下的所有直接子元素
+	var children=parent.children;
+	//遍历所有直接子元素
+	for(var child of children){
+		//输出当前子元素的标签名
+		console.log(child.nodeName)
+		/*if(child.innerHTML=="{{count}}"){
+			child.innerHTML=count;
+		}else if(child.innerHTML=="{{total}}"){
+			child.innerHTML=total;
+		}*/
+		          //元素 的 标签名
+		//2. 如果child有下级直接子元素
+		if(child.children.length>0){
+			//就对child继续调用getChildren
+			arguments.callee(child)
+		}
+	}
+}
+//查找body下所有后代元素
+getChildren(document.body);
+</script>
+	</body>
+</html>
