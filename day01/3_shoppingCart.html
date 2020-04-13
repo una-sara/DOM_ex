@@ -1,0 +1,115 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<title>使用Selector API实现购物车客户端计算</title>
+<meta charset="utf-8" />
+<style>
+	table{width:600px; text-align:center;
+		border-collapse:collapse;
+	}
+	td,th{border:1px solid black}
+	td[colspan="3"]{text-align:right;}
+</style>
+
+</head>
+<body>
+	<table id="data">
+		<thead>
+			<tr>
+				<th>商品名称</th>
+				<th>单价</th>
+				<th>数量</th>
+				<th>小计</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>iPhone6</td>
+				<td>¥4488.00</td>
+        <td>
+          <button>-</button>
+          <span>1</span>
+          <button>+</button>
+        </td>
+				<td>¥4488.00</td>
+			</tr>
+			<tr>
+				<td>iPhone6 plus</td>
+				<td>¥5288.00</td>
+				<td>
+          <button>-</button>
+          <span>1</span>
+          <button>+</button>
+				</td>
+				<td>¥5288.00</td>
+			</tr>
+			<tr>
+				<td>iPad Air 2</td>
+				<td>¥4288.00</td>
+        <td>
+          <button>-</button>
+          <span>1</span>
+          <button>+</button>
+        </td>
+				<td>¥4288.00</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="3">Total: </td>
+				<td>¥14064.00</td>
+			</tr>
+		</tfoot>
+	</table>
+<script>
+//DOM操作的标准步骤: 4步
+//1. 查找触发事件的元素
+//2. 绑定事件处理函数
+	//3. 查找要修改的元素
+	//4. 修改元素
+
+//1. 查找触发事件的元素
+//先找到table元素
+var table=document.getElementById("data");
+//在table中查找所有按钮元素
+var btns=table.getElementsByTagName("button");
+console.log(btns);
+//2. 绑定事件处理函数
+//on当 click单击 [0]第一个 btns按钮时
+/*btns[0].onclick=function(){
+	//自动执行function
+	alert("疼!");
+}*/
+//遍历btns中每个按钮
+for(var btn of btns){
+	//每遍历一个按钮，就为按钮的onclick属性提前绑定一个处理函数
+	btn.onclick=function(){
+		//需求: 让当前按钮的背景变为红色
+		//直接用btn一定是错的: 
+		//因为btn是唯一的一个全局变量,又是循环的循环变量，在程序执行完，btn只能指向最后一个按钮。
+		//当事件发生时，处理函数临时查找btn变量使用，也只能修改最后一个按钮！
+		//如何获得当前单击的按钮呢？
+		//只要在事件处理函数中想获得当前正在单击的按钮，最可靠的办法就是this!
+		//因为this比较晦涩，所以在企业中，都会先给this起外号！再使用外号！
+		//golden=李然
+		var thisBtn=this;
+		thisBtn.style.backgroundColor="red";
+	}
+}
+/*
+	什么是事件: 浏览器自动触发的或用户手动触发的页面元素状态的改变
+	问题: 事件随时有可能发生，但是，默认即使发生了事件，也不做任何操作！如果希望当事件发生时，可按照我们的要求自动执行一项任务?
+	解决: 元素的事件属性和事件处理函数
+	事件属性: 每个元素上都有一批on开头的事件属性，比如: onclick  onmouseover ...但是，这些事件属性的默认值都为null，也就是说，即使发生事件，也什么都不做！
+	事件处理函数: 当事件发生时，希望自动执行的函数
+	如何让事件处理函数在事件发生时，自动执行呢？
+	解决: 将事件处理函数，提前赋值给元素的事件属性保存起来！
+		比如: 希望单击按钮时执行一项任务:
+			btn.onclick=function(){ 任务 }
+									回调函数
+	原理: 只要这个按钮上发生了某个事件，浏览器就会自动找到这个按钮上对应的onxxx事件属性，如果这个事件属性上提前绑定了处理函数，就自动调用该函数: 自动当前按钮.onclick()
+			//在onclick()中获得.前的当前按钮，只能用this!
+*/
+</script>
+</body>
+</html>
