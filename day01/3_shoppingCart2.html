@@ -1,0 +1,156 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<title>使用Selector API实现购物车客户端计算</title>
+<meta charset="utf-8" />
+<style>
+	table{width:600px; text-align:center;
+		border-collapse:collapse;
+	}
+	td,th{border:1px solid black}
+	td[colspan="3"]{text-align:right;}
+	/*tbody中每行最后一个td背景变为黄色*/
+	tbody td:last-child{
+		background-color:yellow;
+	}
+	/*tfoot中最后一个td背景变为粉色*/
+	tfoot td:last-child{
+		background-color:pink
+	}
+</style>
+
+</head>
+<body>
+	<table id="data">
+		<thead>
+			<tr>
+				<th>商品名称</th>
+				<th>单价</th>
+				<th>数量</th>
+				<th>小计</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>iPhone6</td>
+				<td>¥4488.00</td>
+        <td>
+          <button>-</button>
+          <span>1</span>
+          <button>+</button>
+        </td>
+				<td>¥4488.00</td>
+			</tr>
+			<tr>
+				<td>iPhone6 plus</td>
+				<td>¥5288.00</td>
+				<td>
+          <button>-</button>
+          <span>1</span>
+          <button>+</button>
+				</td>
+				<td>¥5288.00</td>
+			</tr>
+			<tr>
+				<td>iPad Air 2</td>
+				<td>¥4288.00</td>
+        <td>
+          <button>-</button>
+          <span>1</span>
+          <button>+</button>
+        </td>
+				<td>¥4288.00</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="3">Total: </td>
+				<td>¥14064.00</td>
+			</tr>
+		</tfoot>
+	</table>
+<script>
+//DOM操作的标准步骤: 4步
+//1. 查找触发事件的元素
+//2. 绑定事件处理函数
+	//3. 查找要修改的元素
+	//4. 修改元素
+
+//1. 查找触发事件的元素
+//先找到table元素
+var table=document.getElementById("data");
+//在table中查找所有按钮元素
+var btns=table.getElementsByTagName("button");
+console.log(btns);
+//2. 绑定事件处理函数
+//遍历btns中每个按钮
+for(var btn of btns){
+	//每遍历一个按钮，就为按钮的onclick属性提前绑定一个处理函数
+	btn.onclick=function(){
+		//几乎所有的事件处理函数第一句都是获得this，起别名
+		var thisBtn=this;
+		//3. 查找要修改的元素
+		//查找当前按钮的爹的第2个孩子span
+		var span=thisBtn.parentNode//td
+									.children[1]//span
+		//4. 修改元素
+		//警告: 凡是从页面上获得内容，都是字符串
+		//先获得span的内容，转为整数
+		var n=parseInt(span.innerHTML);
+		//如果当前按钮的内容是+
+		if(thisBtn.innerHTML=="+"){
+			n+=1;//span的内容就+1
+		}else if(n>1){//否则,如果span的内容>1
+			n-=1;//才-1
+		}
+		//警告: 从页面上获得的值，都是按值传递下来的字符串副本，修改变量，元素中的内容不会自动变化。所以修改后，都要放回去！
+		//设置span的内容为新的n
+		span.innerHTML=n;
+
+		/*数量变化，修改小计
+			强调: 这段代码还应该写在事件处理函数内！*/
+		//3. 查找要修改的元素
+		//查找当前按钮的爹的下一个兄弟
+		var td=thisBtn
+							.parentNode //当前td
+							.nextElementSibling;
+							//当前td的下一个兄弟td
+	//td.style.backgroundColor="yellow"
+		//4. 修改元素
+		//获得单价:获得当前按钮的爹的前一个兄弟元素的内容，选取从1位置到结尾的剩余字符，转为浮点数
+		var price=parseFloat(
+			thisBtn.parentNode//当前td
+					.previousElementSibling
+					//前一个兄弟td
+					.innerHTML//"¥4488.00"
+					.slice(1) //"4488.00"
+		);//4488
+		//设置最后一个td的内容为单价*数量,再格式化成货币的格式
+		td.innerHTML=`¥${(price*n).toFixed(2)}`;
+
+		/*算总价*/
+		//总价=每行最后一个td中的小计的和
+		//获得tbody中每行最后一个td
+		var tds=table.querySelectorAll(
+			"tbody td:last-child"
+		);
+		console.log(tds);
+		var total=0;
+		//遍历每行最后一个td
+		for(var td of tds){
+			//每遍历一个td，就将td的内容累加到total上
+			total+=parseFloat(
+				td.innerHTML//"¥4488.00"
+					.slice(1)//"4488.00"
+			);//4488
+		}
+		//将累加的和赋值给tfoot中的最后一个td
+		var lastTd=table.querySelector(
+			"tfoot td:last-child"
+		);
+		lastTd.innerHTML=`¥${total.toFixed(2)}`;
+	}
+}
+</script>
+</body>
+</html>
