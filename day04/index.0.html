@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- saved from url=(0073)http://code.tarena.com.cn/WEBCode/wfd1905/DOM/day04/homework/index.0.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=GBK">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./index.0_files/ajax.js.下载"></script>
+</head>
+<body>
+<script>
+  var total=0;
+  ajax({
+    url:"http://localhost:5050/",
+    data:"type=a"
+  })//return new Promise
+  .then(result=>{
+    total+=result.count;
+    return ajax({//return new Promise
+      url:"http://localhost:5050/",
+      data:"type=b"
+    });//濡傛灉ajax鏈夎繑鍥炲�糿ew Promise锛屽彲鐢╮eturn鎶涘嚭鍒皌hen澶栵紝鎺ヤ笅涓�涓猼hen
+  })//return new Promise
+  .then(result=>{
+    total+=result.count;
+    return ajax({//return new Promise
+      url:"http://localhost:5050/",
+      data:"type=c"
+    });
+  })//return new Promise
+  .then(result=>{
+    total+=result.count;
+    console.log(total);
+  })
+</script>
+
+</body></html>
