@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!-- saved from url=(0073)http://code.tarena.com.cn/WEBCode/wfd1905/DOM/day04/homework/index.2.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=GBK">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./index.2_files/ajax.js.下载"></script>
+</head>
+<body>
+<script>
+  var total=0;
+  (async function(){
+    var arr=await Promise.all([
+      ajax({
+        url:"http://localhost:5050",
+        data:"type=a"
+      }),
+      ajax({
+        url:"http://localhost:5050",
+        data:"type=b"
+      }),
+      ajax({
+        url:"http://localhost:5050",
+        data:"type=c"
+      }),
+    ]);
+    /*arr:[
+      {type:"a",count:30},
+      {type:"b",count:20},
+      {type:"c",count:40},
+    ]*/
+    for(var obj of arr){
+      total+=obj.count;
+    }
+    console.log(total);
+  })()
+</script>
+
+</body></html>
